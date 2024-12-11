@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DatabaseConnector {
 
     // Update the URL to use 127.0.0.1 and your actual database name (VendorConnectDB)
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/VendorConnectDB?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/VendorConnectDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     
     // Replace with your MySQL username and password
     private static final String USER = "root"; // Or your DB username

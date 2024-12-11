@@ -1,19 +1,12 @@
 package main;
 
 import dao.VendorDAO;
-import javafx.application.Application;
-import javafx.stage.Stage;
-import model.Vendor;
-import view.MainView;  // Assuming you create a MainView class for the GUI
+import view.MainView;
 
-public class Main extends Application {
+public class Main {
 
     public static void main(String[] args) {
-        launch(args);  // Launch the JavaFX application
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
+        // Test database connection and operations
         VendorDAO vendorDAO = new VendorDAO();
 
         // Test adding a vendor to the database
@@ -25,15 +18,15 @@ public class Main extends Application {
         }
 
         // Test retrieving a vendor by ID
-        Vendor vendor = vendorDAO.getVendor(1);  // Assuming there's a vendor with ID 1
+        System.out.println("Fetching vendor with ID 1...");
+        var vendor = vendorDAO.getVendor(1); // Assuming there's a vendor with ID 1
         if (vendor != null) {
             System.out.println("Vendor retrieved: " + vendor);
         } else {
             System.out.println("Vendor not found.");
         }
 
-        // Initialize your JavaFX GUI
-        MainView view = new MainView();
-        view.start(primaryStage);  // Start the view with the Stage
+        // Initialize and show the Swing GUI
+        MainView.main(args);
     }
 }
