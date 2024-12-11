@@ -13,7 +13,7 @@ public class MainView {
         // Create the main JFrame
         JFrame frame = new JFrame("Vendor Connect");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);  // Adjusted size for better layout
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 
         // Create the CardLayout for managing multiple pages
         CardLayout cardLayout = new CardLayout();
@@ -29,7 +29,7 @@ public class MainView {
         JLabel vendorConnectLabel = new JLabel("VendorConnect", JLabel.LEFT);
         vendorConnectLabel.setFont(new Font("Arial", Font.BOLD, 20));
         vendorConnectLabel.setForeground(Color.WHITE); // Set text color to white
-        
+
         // Make the VendorConnect label clickable
         vendorConnectLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));  // Change cursor to hand
 
@@ -92,12 +92,11 @@ public class MainView {
         frame.add(navbarPanel, BorderLayout.NORTH);
 
         // --- Create the homepage panel with vendor input and map (initialized only once) ---
-
         // Create a JPanel for vendor input fields and button
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(5, 2, 10, 10)); // 5 rows, 2 columns
-        
-        // Add input fields with labels
+        inputPanel.setLayout(new GridLayout(2, 4, 10, 10)); // 2 rows, 4 columns, with 10px gaps
+
+        // Add input fields with labels side by side
         JLabel nameLabel = new JLabel("Vendor Name:");
         JTextField nameField = new JTextField();
 
@@ -110,9 +109,7 @@ public class MainView {
         JLabel phoneLabel = new JLabel("Vendor Phone:");
         JTextField phoneField = new JTextField();
 
-        JButton addButton = new JButton("Add Vendor");
-
-        // Add components to input panel
+        // Add components to input panel in 2x2 layout
         inputPanel.add(nameLabel);
         inputPanel.add(nameField);
         inputPanel.add(descriptionLabel);
@@ -121,8 +118,11 @@ public class MainView {
         inputPanel.add(addressField);
         inputPanel.add(phoneLabel);
         inputPanel.add(phoneField);
-        inputPanel.add(new JLabel()); // Empty space in the grid
-        inputPanel.add(addButton);
+
+        // Create a panel for the Add Vendor button
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton addButton = new JButton("Add Vendor");
+        buttonPanel.add(addButton);
 
         // Add functionality to the add button
         addButton.addActionListener(new ActionListener() {
@@ -143,6 +143,12 @@ public class MainView {
             }
         });
 
+        // Add the inputPanel and buttonPanel to a parent panel
+        JPanel homeInputPanel = new JPanel();
+        homeInputPanel.setLayout(new BorderLayout(10, 10));
+        homeInputPanel.add(inputPanel, BorderLayout.CENTER);
+        homeInputPanel.add(buttonPanel, BorderLayout.SOUTH);
+
         // Create a JPanel for displaying the map (placeholder for now)
         JPanel mapPanel = new JPanel();
         mapPanel.setLayout(new BorderLayout());
@@ -155,18 +161,56 @@ public class MainView {
         // Create the homePanel (which will be reused)
         JPanel homePanel = new JPanel();
         homePanel.setLayout(new BorderLayout());
-        homePanel.add(inputPanel, BorderLayout.SOUTH);
+        homePanel.add(homeInputPanel, BorderLayout.SOUTH);
         homePanel.add(mapPanel, BorderLayout.CENTER);
-
         // --- End of homepage setup ---
 
         // Create the "How to Use" page
         JPanel howToUsePanel = new JPanel();
-        howToUsePanel.add(new JLabel("How to Use - Instructions"));
+        howToUsePanel.setLayout(new BorderLayout());
 
-        // Create the "About Us" page
+        // Create a JTextArea for instructions
+        JTextArea instructions = new JTextArea(
+                "1. **Add a Vendor:**\n" +
+                "   - Enter the vendor's name, description, address, and phone number.\n" +
+                "   - Click the \"Add Vendor\" button.\n\n" +
+                "2. **View Vendors on Map:**\n" +
+                "   - (Map functionality to be implemented later)\n" +
+                "   - The map will display the locations of all added vendors.\n" +
+                "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
+                "3. **Other Features:**\n" +
+                "   - (List future features here, e.g., vendor search, filtering, etc.)");
+        instructions.setEditable(false); // Make the text area read-only
+        instructions.setLineWrap(true);
+        instructions.setWrapStyleWord(true);
+        instructions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
+
+        // Add a scroll pane to the JTextArea
+        JScrollPane scrollPane = new JScrollPane(instructions);
+
+        // Add the scroll pane to the howToUsePanel
+        howToUsePanel.add(scrollPane, BorderLayout.CENTER);
+ 
+
         JPanel aboutUsPanel = new JPanel();
-        aboutUsPanel.add(new JLabel("About Us - Information"));
+        aboutUsPanel.setLayout(new BorderLayout());
+
+        // Create a JTextArea for about us information
+        JTextArea aboutUsText = new JTextArea(
+                "Welcome to VendorConnect, your one-stop platform for discovering and connecting with local businesses.\n\n" +
+                "We believe in supporting local economies and empowering businesses to thrive. VendorConnect aims to provide a user-friendly platform for vendors to showcase their services and for customers to find the perfect local businesses that meet their needs.\n\n" +
+                "Our mission is to create a vibrant online community that connects businesses with their ideal customers. We strive to provide a seamless experience for both vendors and customers, making it easy to find, connect, and support local businesses.\n\n" +
+                "We are constantly working to improve VendorConnect and add new features to enhance the user experience. We welcome your feedback and suggestions as we continue to build a better platform for our community.");
+        aboutUsText.setEditable(false); // Make the text area read-only
+        aboutUsText.setLineWrap(true);
+        aboutUsText.setWrapStyleWord(true);
+        aboutUsText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
+
+        // Add a scroll pane to the JTextArea
+        JScrollPane scrollPane1 = new JScrollPane(aboutUsText);
+
+        // Add the scroll pane to the aboutUsPanel
+        aboutUsPanel.add(scrollPane1, BorderLayout.CENTER);
 
         // Create the "Login" page
         JPanel loginPanel = new JPanel();
