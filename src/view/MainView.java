@@ -28,10 +28,9 @@ public class MainView {
         CardLayout cardLayout = new CardLayout();
         JPanel cardPanel = new JPanel(cardLayout);
 
+       
         
-        
-        
-     // --- Home Page ---
+        // --- Home Page ---
         JPanel homePanel = new JPanel(new BorderLayout()); 
 
         // --- Map setup ---
@@ -90,7 +89,7 @@ public class MainView {
         // Add the combined bottom panel to the homePanel
         homePanel.add(bottomPanel, BorderLayout.SOUTH);
         
-     // Add functionality to the add button
+        // Add functionality to the add button
         addButton.addActionListener(e -> {
             String name = nameField.getText();
             String description = descriptionField.getText();
@@ -139,16 +138,19 @@ public class MainView {
         // Create clickable JLabel links for navigation
         JLabel howToUseLabel = new JLabel("How to Use");
         JLabel aboutUsLabel = new JLabel("About Us");
+        JLabel favoritesLabel = new JLabel("Favorites");
         JLabel loginLabel = new JLabel("Login");
 
         // Set text color to white for all links
         howToUseLabel.setForeground(Color.WHITE);
         aboutUsLabel.setForeground(Color.WHITE);
+        favoritesLabel.setForeground(Color.WHITE);
         loginLabel.setForeground(Color.WHITE);
 
         // Set hand cursor for each link to indicate clickability
         howToUseLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         aboutUsLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        favoritesLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         loginLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // Add mouse listeners to handle navigation
@@ -163,6 +165,12 @@ public class MainView {
                 cardLayout.show(cardPanel, "AboutUs"); // Navigate to "About Us" panel
             }
         });
+        
+        favoritesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cardLayout.show(cardPanel, "Favorites"); // Navigate to "Favorites" panel
+            }
+        });
 
         loginLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -173,6 +181,7 @@ public class MainView {
         // Add the clickable labels to the link panel
         linkPanel.add(howToUseLabel);
         linkPanel.add(aboutUsLabel);
+        linkPanel.add(favoritesLabel);
         linkPanel.add(loginLabel);
 
         // Add the link panel to the right side of the navbar
@@ -184,6 +193,8 @@ public class MainView {
         // Add the navbar to the top of the main frame
         frame.add(navbarPanel, BorderLayout.NORTH);
 
+        
+        
         // --- "How to Use" Page ---
         JPanel howToUsePanel = new JPanel();
         howToUsePanel.setLayout(new BorderLayout());
@@ -210,6 +221,9 @@ public class MainView {
         // Add the scroll pane to the howToUsePanel
         howToUsePanel.add(scrollPane, BorderLayout.CENTER);
 
+        
+        
+        
         // --- "About Us" Page ---
         JPanel aboutUsPanel = new JPanel();
         aboutUsPanel.setLayout(new BorderLayout());
@@ -230,7 +244,21 @@ public class MainView {
 
         // Add the scroll pane to the aboutUsPanel
         aboutUsPanel.add(scrollPane1, BorderLayout.CENTER);
+        
+        
+        
+        
+        
+        
+        // --- "Favorites" Page ---
+        JPanel favoritesPanel = new JPanel();
 
+        
+        
+        
+        
+        
+        
         // --- "Login" Page ---
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridBagLayout());
@@ -358,6 +386,7 @@ public class MainView {
         cardPanel.add(homePanel, "Home");
         cardPanel.add(howToUsePanel, "HowToUse");
         cardPanel.add(aboutUsPanel, "AboutUs");
+        cardPanel.add(favoritesPanel, "Favorites");
         cardPanel.add(loginPanel1, "Login");
 
         // Add cardPanel to the main frame
