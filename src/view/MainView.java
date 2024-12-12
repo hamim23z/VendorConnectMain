@@ -257,11 +257,16 @@ public class MainView {
                 "Welcome to VendorConnect, your one-stop platform for discovering and connecting with local businesses.\n\n" +
                         "We believe in supporting local economies and empowering businesses to thrive. VendorConnect aims to provide a user-friendly platform for vendors to showcase their services and for customers to find the perfect local businesses that meet their needs.\n\n" +
                         "Our mission is to create a vibrant online community that connects businesses with their ideal customers. We strive to provide a seamless experience for both vendors and customers, making it easy to find, connect, and support local businesses.\n\n" +
-                        "We are constantly working to improve VendorConnect and add new features to enhance the user experience. We welcome your feedback and suggestions as we continue to build a better platform for our community.");
-        aboutUsText.setEditable(false); // Make the text area read-only
-        aboutUsText.setLineWrap(true);
-        aboutUsText.setWrapStyleWord(true);
-        aboutUsText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
+                        "We are constantly working to improve VendorConnect and add new features to enhance the user experience. We welcome your feedback and suggestions as we continue to build a better platform for our community.\n\n" +
+                        "At VendorConnect, we understand the challenges that local businesses face in a competitive market. Our platform is designed to give you the visibility and tools to stand out, whether you're a small startup or an established business. By listing your services on VendorConnect, you gain access to a broader audience of potential customers who are eager to support local enterprises.\n\n" +
+                        "Our team is dedicated to creating a safe and reliable space for both vendors and customers. We prioritize transparency, security, and customer satisfaction, ensuring that every transaction and interaction on our platform is smooth and trustworthy.\n\n" +
+                        "Join our growing community of local businesses and customers today! Together, we can help strengthen local economies and make a positive impact in our communities."
+        );
+aboutUsText.setEditable(false); // Make the text area read-only
+aboutUsText.setLineWrap(true);
+aboutUsText.setWrapStyleWord(true);
+aboutUsText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
 
         // Add a scroll pane to the JTextArea
         JScrollPane scrollPane1 = new JScrollPane(aboutUsText);
