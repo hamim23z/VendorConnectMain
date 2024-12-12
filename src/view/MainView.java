@@ -28,15 +28,15 @@ public class MainView {
         CardLayout cardLayout = new CardLayout();
         JPanel cardPanel = new JPanel(cardLayout);
 
-        // --- Home Page ---
-     // --- Home Page Setup ---
-        JPanel homePanel = new JPanel(new BorderLayout());
+        
+        
+        
+     // --- Home Page ---
+        JPanel homePanel = new JPanel(new BorderLayout()); 
 
         // --- Map setup ---
-        JPanel mapPanel = new JPanel(new BorderLayout()); // Main panel to hold the map
-
-        // Create and configure the JXMapViewer
-        JXMapViewer mapViewer = new JXMapViewer();
+        JPanel mapPanel = new JPanel(new BorderLayout()); 
+        JXMapViewer mapViewer = new JXMapViewer(); 
         mapViewer.setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo())); // Use OpenStreetMap tiles
         mapViewer.setCenterPosition(new GeoPosition(40.7128, -74.0060)); // NYC coordinates
         mapViewer.setZoom(8);
@@ -47,14 +47,14 @@ public class MainView {
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
 
         // Add the JXMapViewer to the mapPanel
-        mapPanel.add(mapViewer, BorderLayout.CENTER);
+        mapPanel.add(mapViewer, BorderLayout.CENTER); 
 
         // Add the mapPanel to the homePanel
-        homePanel.add(mapPanel, BorderLayout.CENTER); // Add the map as the content of the homePanel
-        
+        homePanel.add(mapPanel, BorderLayout.CENTER); 
+
         // --- Input fields setup ---
-        JPanel inputPanel = new JPanel(new GridLayout(2, 4, 10, 10)); // Grid for input fields
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
+        JPanel inputPanel = new JPanel(new GridLayout(2, 4, 10, 10)); 
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); 
 
         // Add input fields with labels
         JLabel nameLabel = new JLabel("Vendor Name:");
@@ -78,23 +78,29 @@ public class MainView {
         inputPanel.add(phoneLabel);
         inputPanel.add(phoneField);
 
-        // Add the input panel to the bottom of the home panel
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(inputPanel, BorderLayout.CENTER);
+        // --- Combine input and button panels ---
+        JPanel bottomPanel = new JPanel(new BorderLayout()); 
+        bottomPanel.add(inputPanel, BorderLayout.CENTER); 
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton addButton = new JButton("Add Vendor");
-        buttonPanel.add(addButton);
-        
-        // Add the bottom panel (input fields + button) to the homePanel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+        JButton addButton = new JButton("Add Vendor"); 
+        buttonPanel.add(addButton); 
+        bottomPanel.add(buttonPanel, BorderLayout.SOUTH); 
+
+        // Add the combined bottom panel to the homePanel
         homePanel.add(bottomPanel, BorderLayout.SOUTH);
-
-        // Add functionality to the add button
+        
+     // Add functionality to the add button
         addButton.addActionListener(e -> {
             String name = nameField.getText();
             String description = descriptionField.getText();
             String address = addressField.getText();
             String phone = phoneField.getText();
+            
+            if (phone.length() != 10) {
+                JOptionPane.showMessageDialog(frame, "Phone number must be 10 digits long (e.g., 1234567890)", "Invalid Phone Number", JOptionPane.ERROR_MESSAGE);
+                return; 
+            }
 
             VendorDAO vendorDAO = new VendorDAO();
             boolean isAdded = vendorDAO.addVendor(name, description, address, phone);
@@ -106,16 +112,8 @@ public class MainView {
         });
 
 
-        // --- CardLayout setup ---
-        cardPanel.add("Home", homePanel); // Add the homePanel as the "Home" panel
-        frame.add(cardPanel, BorderLayout.CENTER);
-
-        // Show the home panel initially
-        cardLayout.show(cardPanel, "Home");
-
-        frame.setVisible(true); // Make the frame visible
-
-
+        
+        
         // --- Navbar setup ---
         JPanel navbarPanel = new JPanel(new BorderLayout()); // Panel to hold the navbar (left and right sections)
         navbarPanel.setBackground(Color.BLACK); // Set background color to match the navbar color

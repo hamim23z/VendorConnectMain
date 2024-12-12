@@ -47,7 +47,7 @@ public class VendorDAO {
                 String description = rs.getString("description");  // Retrieve description
                 String address = rs.getString("address");
                 String phone = rs.getString("phone");
-                return new Vendor(id, name, description, address, phone);
+                return new Vendor(name, description, address, phone);
             }
         } catch (SQLException e) {
             e.printStackTrace();
