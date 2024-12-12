@@ -218,9 +218,8 @@ public class MainView {
                 "   - Enter the vendor's name, description, address, and phone number.\n" +
                 "   - Click the \"Add Vendor\" button.\n\n" +
                 "2. **View Vendors on Map:**\n" +
-                "   - (Map functionality to be implemented later)\n" +
                 "   - The map will display the locations of all added vendors.\n" +
-                "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
+                "   - It will show all the details of the vendor" +
                 "3. **Vendor Search:**\n" +
                 "   - Use the search bar to find a specific vendor by name or description.\n" +
                 "   - The search results will dynamically filter the vendor list as you type.\n" +
