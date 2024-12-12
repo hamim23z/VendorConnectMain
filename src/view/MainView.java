@@ -1,6 +1,8 @@
 package view;
 
 import dao.VendorDAO;
+import dao.UserDAO;
+import model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -212,9 +214,126 @@ public class MainView {
         // Add the scroll pane to the aboutUsPanel
         aboutUsPanel.add(scrollPane1, BorderLayout.CENTER);
 
+        
+        
+        
         // Create the "Login" page
+     // Inside the main method, replace the login panel creation with:
         JPanel loginPanel = new JPanel();
-        loginPanel.add(new JLabel("Login Page"));
+        loginPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Signup Panel
+        JPanel signupPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        signupPanel.setBorder(BorderFactory.createTitledBorder("Sign Up"));
+
+        JTextField signupUsernameField = new JTextField();
+        JTextField signupEmailField = new JTextField();
+        JPasswordField signupPasswordField = new JPasswordField();
+        JPasswordField signupConfirmPasswordField = new JPasswordField();
+
+        signupPanel.add(new JLabel("Username:"));
+        signupPanel.add(signupUsernameField);
+        signupPanel.add(new JLabel("Email:"));
+        signupPanel.add(signupEmailField);
+        signupPanel.add(new JLabel("Password:"));
+        signupPanel.add(signupPasswordField);
+        signupPanel.add(new JLabel("Confirm Password:"));
+        signupPanel.add(signupConfirmPasswordField);
+
+        JButton signupButton = new JButton("Sign Up");
+        signupPanel.add(new JLabel()); // Empty label for spacing
+        signupPanel.add(signupButton);
+
+        // Login Panel
+        JPanel loginFormPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        loginFormPanel.setBorder(BorderFactory.createTitledBorder("Login"));
+
+        JTextField loginUsernameField = new JTextField();
+        JPasswordField loginPasswordField = new JPasswordField();
+
+        loginFormPanel.add(new JLabel("Username:"));
+        loginFormPanel.add(loginUsernameField);
+        loginFormPanel.add(new JLabel("Password:"));
+        loginFormPanel.add(loginPasswordField);
+
+        JButton loginButton = new JButton("Login");
+        JButton switchToSignupButton = new JButton("Create Account");
+
+        loginFormPanel.add(switchToSignupButton);
+        loginFormPanel.add(loginButton);
+
+        // Action Listeners
+        UserDAO userDAO = new UserDAO();
+
+        signupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = signupUsernameField.getText();
+                String email = signupEmailField.getText();
+                String password = new String(signupPasswordField.getPassword());
+                String confirmPassword = new String(signupConfirmPasswordField.getPassword());
+
+                // Validate inputs
+                if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!password.equals(confirmPassword)) {
+                    JOptionPane.showMessageDialog(frame, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Attempt signup
+                boolean signupSuccess = userDAO.signupUser(username, email, password);
+                if (signupSuccess) {
+                    JOptionPane.showMessageDialog(frame, "Account created successfully!");
+                    // Switch to the "Home" panel
+                    cardLayout.show(cardPanel, "Home"); 
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Username already exists or signup failed", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = loginUsernameField.getText();
+                String password = new String(loginPasswordField.getPassword());
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please enter username and password", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Attempt login
+                boolean loginSuccess = userDAO.loginUser(username, password);
+                if (loginSuccess) {
+                    JOptionPane.showMessageDialog(frame, "Login successful!");
+                    // Switch to the "Home" panel
+                    cardLayout.show(cardPanel, "Home"); 
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        switchToSignupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Switch between login and signup panels
+                loginPanel.removeAll();
+                loginPanel.add(signupPanel);
+                loginPanel.revalidate();
+                loginPanel.repaint();
+            }
+        });
+
+        // Initial login panel setup
+        loginPanel.add(loginFormPanel);
 
         // Add all pages to the cardPanel (this is the container for all pages)
         cardPanel.add(homePanel, "Home");
