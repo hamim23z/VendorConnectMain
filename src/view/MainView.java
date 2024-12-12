@@ -1,8 +1,13 @@
 package view;
 
-import dao.VendorDAO;
 import dao.UserDAO;
-import model.User;
+import dao.VendorDAO;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,90 +20,43 @@ public class MainView {
         // Create the main JFrame
         JFrame frame = new JFrame("Vendor Connect");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+
+        // Set the frame to full-screen mode
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Create the CardLayout for managing multiple pages
         CardLayout cardLayout = new CardLayout();
-        JPanel cardPanel = new JPanel(cardLayout);  // This will hold all the different panels/pages
+        JPanel cardPanel = new JPanel(cardLayout);
 
-        // Create the top navbar panel
-        JPanel navbarPanel = new JPanel();
-        navbarPanel.setLayout(new BorderLayout());
-        navbarPanel.setBackground(Color.BLACK); // Set navbar background color to black
-        navbarPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Add padding (top, left, bottom, right)
+        // --- Home Page ---
+     // --- Home Page Setup ---
+        JPanel homePanel = new JPanel(new BorderLayout());
 
-        // Create the "VendorConnect" label on the left
-        JLabel vendorConnectLabel = new JLabel("VendorConnect", JLabel.LEFT);
-        vendorConnectLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        vendorConnectLabel.setForeground(Color.WHITE); // Set text color to white
+        // --- Map setup ---
+        JPanel mapPanel = new JPanel(new BorderLayout()); // Main panel to hold the map
 
-        // Make the VendorConnect label clickable
-        vendorConnectLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));  // Change cursor to hand
+        // Create and configure the JXMapViewer
+        JXMapViewer mapViewer = new JXMapViewer();
+        mapViewer.setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo())); // Use OpenStreetMap tiles
+        mapViewer.setCenterPosition(new GeoPosition(40.7128, -74.0060)); // NYC coordinates
+        mapViewer.setZoom(8);
 
-        // Add action listener to the label to switch to the home page
-        vendorConnectLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cardLayout.show(cardPanel, "Home");  // Show the "Home" panel when clicked
-            }
-        });
+        // Add interaction listeners for panning and zooming
+        mapViewer.addMouseListener(new PanMouseInputListener(mapViewer));
+        mapViewer.addMouseMotionListener(new PanMouseInputListener(mapViewer));
+        mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
 
-        navbarPanel.add(vendorConnectLabel, BorderLayout.WEST);
+        // Add the JXMapViewer to the mapPanel
+        mapPanel.add(mapViewer, BorderLayout.CENTER);
 
-        // Create clickable text labels instead of buttons
-        JPanel linkPanel = new JPanel();
-        linkPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 0)); // Add gap of 20px between items
-        linkPanel.setBackground(Color.BLACK); // Set panel background to black
+        // Add the mapPanel to the homePanel
+        homePanel.add(mapPanel, BorderLayout.CENTER); // Add the map as the content of the homePanel
+        
+        // --- Input fields setup ---
+        JPanel inputPanel = new JPanel(new GridLayout(2, 4, 10, 10)); // Grid for input fields
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        // Create JLabel for "How to Use", "About Us", "Login"
-        JLabel howToUseLabel = new JLabel("How to Use");
-        JLabel aboutUsLabel = new JLabel("About Us");
-        JLabel loginLabel = new JLabel("Login");
-
-        // Set the color to white for the text of all labels
-        howToUseLabel.setForeground(Color.WHITE);
-        aboutUsLabel.setForeground(Color.WHITE);
-        loginLabel.setForeground(Color.WHITE);
-
-        // Make the labels clickable like anchor tags
-        howToUseLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        aboutUsLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        loginLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        // Add MouseListener to the labels to switch between pages
-        howToUseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cardLayout.show(cardPanel, "HowToUse");
-            }
-        });
-
-        aboutUsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cardLayout.show(cardPanel, "AboutUs");
-            }
-        });
-
-        loginLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cardLayout.show(cardPanel, "Login");
-            }
-        });
-
-        // Add labels to the panel (this acts like links)
-        linkPanel.add(howToUseLabel);
-        linkPanel.add(aboutUsLabel);
-        linkPanel.add(loginLabel);
-
-        navbarPanel.add(linkPanel, BorderLayout.EAST);
-
-        // Add the navbar to the top of the frame
-        frame.add(navbarPanel, BorderLayout.NORTH);
-
-        // --- Create the homepage panel with vendor input and map (initialized only once) ---
-        // Create a JPanel for vendor input fields and button
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(2, 4, 10, 10)); // 2 rows, 4 columns, with 10px gaps
-
-        // Add input fields with labels side by side
+        // Add input fields with labels
         JLabel nameLabel = new JLabel("Vendor Name:");
         JTextField nameField = new JTextField();
 
@@ -111,7 +69,6 @@ public class MainView {
         JLabel phoneLabel = new JLabel("Vendor Phone:");
         JTextField phoneField = new JTextField();
 
-        // Add components to input panel in 2x2 layout
         inputPanel.add(nameLabel);
         inputPanel.add(nameField);
         inputPanel.add(descriptionLabel);
@@ -121,67 +78,129 @@ public class MainView {
         inputPanel.add(phoneLabel);
         inputPanel.add(phoneField);
 
-        // Create a panel for the Add Vendor button
+        // Add the input panel to the bottom of the home panel
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(inputPanel, BorderLayout.CENTER);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton addButton = new JButton("Add Vendor");
         buttonPanel.add(addButton);
+        
+        // Add the bottom panel (input fields + button) to the homePanel
+        homePanel.add(bottomPanel, BorderLayout.SOUTH);
 
         // Add functionality to the add button
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                String description = descriptionField.getText();
-                String address = addressField.getText();
-                String phone = phoneField.getText();
+        addButton.addActionListener(e -> {
+            String name = nameField.getText();
+            String description = descriptionField.getText();
+            String address = addressField.getText();
+            String phone = phoneField.getText();
 
-                VendorDAO vendorDAO = new VendorDAO();
-                boolean isAdded = vendorDAO.addVendor(name, description, address, phone);
-                if (isAdded) {
-                    JOptionPane.showMessageDialog(frame, "Vendor added successfully!");
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Failed to add vendor.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            VendorDAO vendorDAO = new VendorDAO();
+            boolean isAdded = vendorDAO.addVendor(name, description, address, phone);
+            if (isAdded) {
+                JOptionPane.showMessageDialog(frame, "Vendor added successfully!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Failed to add vendor.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        // Add the inputPanel and buttonPanel to a parent panel
-        JPanel homeInputPanel = new JPanel();
-        homeInputPanel.setLayout(new BorderLayout(10, 10));
-        homeInputPanel.add(inputPanel, BorderLayout.CENTER);
-        homeInputPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Create a JPanel for displaying the map (placeholder for now)
-        JPanel mapPanel = new JPanel();
-        mapPanel.setLayout(new BorderLayout());
+        // --- CardLayout setup ---
+        cardPanel.add("Home", homePanel); // Add the homePanel as the "Home" panel
+        frame.add(cardPanel, BorderLayout.CENTER);
 
-        JLabel mapPlaceholder = new JLabel("Map Placeholder", SwingConstants.CENTER);
-        mapPlaceholder.setFont(new Font("Arial", Font.BOLD, 16));
-        mapPlaceholder.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        mapPanel.add(mapPlaceholder, BorderLayout.CENTER);
+        // Show the home panel initially
+        cardLayout.show(cardPanel, "Home");
 
-        // Create the homePanel (which will be reused)
-        JPanel homePanel = new JPanel();
-        homePanel.setLayout(new BorderLayout());
-        homePanel.add(homeInputPanel, BorderLayout.SOUTH);
-        homePanel.add(mapPanel, BorderLayout.CENTER);
-        // --- End of homepage setup ---
+        frame.setVisible(true); // Make the frame visible
 
-        // Create the "How to Use" page
+
+        // --- Navbar setup ---
+        JPanel navbarPanel = new JPanel(new BorderLayout()); // Panel to hold the navbar (left and right sections)
+        navbarPanel.setBackground(Color.BLACK); // Set background color to match the navbar color
+        navbarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Left side of the navbar (logo or vendor name)
+        JLabel logoLabel = new JLabel("VendorConnect");
+        logoLabel.setForeground(Color.WHITE); // Set text color to white
+        logoLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Optional: set font style for the logo/brand name
+        logoLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Make it clickable
+
+        // Add mouse listener to logoLabel to go to the homepage when clicked
+        logoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cardLayout.show(cardPanel, "Home"); // Navigate to "Home" panel
+            }
+        });
+
+        // Links (How to Use, About Us, Login) on the right
+        JPanel linkPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0)); // Right-aligned links with spacing
+        linkPanel.setBackground(Color.BLACK); // Match navbar background color
+
+        // Create clickable JLabel links for navigation
+        JLabel howToUseLabel = new JLabel("How to Use");
+        JLabel aboutUsLabel = new JLabel("About Us");
+        JLabel loginLabel = new JLabel("Login");
+
+        // Set text color to white for all links
+        howToUseLabel.setForeground(Color.WHITE);
+        aboutUsLabel.setForeground(Color.WHITE);
+        loginLabel.setForeground(Color.WHITE);
+
+        // Set hand cursor for each link to indicate clickability
+        howToUseLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        aboutUsLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        loginLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Add mouse listeners to handle navigation
+        howToUseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cardLayout.show(cardPanel, "HowToUse"); // Navigate to "How to Use" panel
+            }
+        });
+
+        aboutUsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cardLayout.show(cardPanel, "AboutUs"); // Navigate to "About Us" panel
+            }
+        });
+
+        loginLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cardLayout.show(cardPanel, "Login"); // Navigate to "Login" panel
+            }
+        });
+
+        // Add the clickable labels to the link panel
+        linkPanel.add(howToUseLabel);
+        linkPanel.add(aboutUsLabel);
+        linkPanel.add(loginLabel);
+
+        // Add the link panel to the right side of the navbar
+        navbarPanel.add(linkPanel, BorderLayout.EAST);
+
+        // Add the logo to the left side of the navbar
+        navbarPanel.add(logoLabel, BorderLayout.WEST);
+
+        // Add the navbar to the top of the main frame
+        frame.add(navbarPanel, BorderLayout.NORTH);
+
+        // --- "How to Use" Page ---
         JPanel howToUsePanel = new JPanel();
         howToUsePanel.setLayout(new BorderLayout());
 
         // Create a JTextArea for instructions
         JTextArea instructions = new JTextArea(
                 "1. **Add a Vendor:**\n" +
-                "   - Enter the vendor's name, description, address, and phone number.\n" +
-                "   - Click the \"Add Vendor\" button.\n\n" +
-                "2. **View Vendors on Map:**\n" +
-                "   - (Map functionality to be implemented later)\n" +
-                "   - The map will display the locations of all added vendors.\n" +
-                "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
-                "3. **Other Features:**\n" +
-                "   - (List future features here, e.g., vendor search, filtering, etc.)");
+                        "   - Enter the vendor's name, description, address, and phone number.\n" +
+                        "   - Click the \"Add Vendor\" button.\n\n" +
+                        "2. **View Vendors on Map:**\n" +
+                        "   - (Map functionality to be implemented later)\n" +
+                        "   - The map will display the locations of all added vendors.\n" +
+                        "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
+                        "3. **Other Features:**\n" +
+                        "   - (List future features here, e.g., vendor search, filtering, etc.)");
         instructions.setEditable(false); // Make the text area read-only
         instructions.setLineWrap(true);
         instructions.setWrapStyleWord(true);
@@ -192,17 +211,17 @@ public class MainView {
 
         // Add the scroll pane to the howToUsePanel
         howToUsePanel.add(scrollPane, BorderLayout.CENTER);
- 
 
+        // --- "About Us" Page ---
         JPanel aboutUsPanel = new JPanel();
         aboutUsPanel.setLayout(new BorderLayout());
 
         // Create a JTextArea for about us information
         JTextArea aboutUsText = new JTextArea(
                 "Welcome to VendorConnect, your one-stop platform for discovering and connecting with local businesses.\n\n" +
-                "We believe in supporting local economies and empowering businesses to thrive. VendorConnect aims to provide a user-friendly platform for vendors to showcase their services and for customers to find the perfect local businesses that meet their needs.\n\n" +
-                "Our mission is to create a vibrant online community that connects businesses with their ideal customers. We strive to provide a seamless experience for both vendors and customers, making it easy to find, connect, and support local businesses.\n\n" +
-                "We are constantly working to improve VendorConnect and add new features to enhance the user experience. We welcome your feedback and suggestions as we continue to build a better platform for our community.");
+                        "We believe in supporting local economies and empowering businesses to thrive. VendorConnect aims to provide a user-friendly platform for vendors to showcase their services and for customers to find the perfect local businesses that meet their needs.\n\n" +
+                        "Our mission is to create a vibrant online community that connects businesses with their ideal customers. We strive to provide a seamless experience for both vendors and customers, making it easy to find, connect, and support local businesses.\n\n" +
+                        "We are constantly working to improve VendorConnect and add new features to enhance the user experience. We welcome your feedback and suggestions as we continue to build a better platform for our community.");
         aboutUsText.setEditable(false); // Make the text area read-only
         aboutUsText.setLineWrap(true);
         aboutUsText.setWrapStyleWord(true);
@@ -214,15 +233,17 @@ public class MainView {
         // Add the scroll pane to the aboutUsPanel
         aboutUsPanel.add(scrollPane1, BorderLayout.CENTER);
 
-        
-        
-        
-        // Create the "Login" page
-     // Inside the main method, replace the login panel creation with:
+        // --- "Login" Page ---
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Add the login page content here as before, just like in your original code
+        JPanel loginPanel1 = new JPanel();
+        loginPanel1.setLayout(new GridBagLayout());
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.insets = new Insets(5, 5, 5, 5);
 
         // Signup Panel
         JPanel signupPanel = new JPanel(new GridLayout(5, 2, 10, 10));
@@ -325,29 +346,30 @@ public class MainView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Switch between login and signup panels
-                loginPanel.removeAll();
-                loginPanel.add(signupPanel);
-                loginPanel.revalidate();
-                loginPanel.repaint();
+                loginPanel1.removeAll();
+                loginPanel1.add(signupPanel);
+                loginPanel1.revalidate();
+                loginPanel1.repaint();
             }
         });
 
         // Initial login panel setup
-        loginPanel.add(loginFormPanel);
+        loginPanel1.add(loginFormPanel);
 
-        // Add all pages to the cardPanel (this is the container for all pages)
+        // --- Card Layout ---
         cardPanel.add(homePanel, "Home");
         cardPanel.add(howToUsePanel, "HowToUse");
         cardPanel.add(aboutUsPanel, "AboutUs");
-        cardPanel.add(loginPanel, "Login");
+        cardPanel.add(loginPanel1, "Login");
 
-        // Add the cardPanel to the main frame
+        // Add cardPanel to the main frame
         frame.add(cardPanel, BorderLayout.CENTER);
 
-        // Set the default page to Home
-        cardLayout.show(cardPanel, "Home");
-
-        // Make the frame visible
+        // Frame setup
+        frame.setSize(800, 600);
         frame.setVisible(true);
+
+        // Show the "Home" page by default
+        cardLayout.show(cardPanel, "Home");
     }
 }
