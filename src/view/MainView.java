@@ -221,8 +221,17 @@ public class MainView {
                 "   - (Map functionality to be implemented later)\n" +
                 "   - The map will display the locations of all added vendors.\n" +
                 "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
-                "3. **Other Features:**\n" +
-                "   - (List future features here, e.g., vendor search, filtering, etc.)"
+                "3. **Vendor Search:**\n" +
+                "   - Use the search bar to find a specific vendor by name or description.\n" +
+                "   - The search results will dynamically filter the vendor list as you type.\n" +
+                "   - Click on a search result to view more details or perform actions (e.g., Edit or Delete).\n\n" +
+                "4. **Edit a Vendor:**\n" +
+                "   - Select a vendor from the list.\n" +
+                "   - Update the desired fields such as name, description, address, or phone number.\n" +
+                "   - Click the \"Update Vendor\" button to save changes.\n\n" +
+                "5. **Delete a Vendor:**\n" +
+                "   - Select a vendor from the list.\n" +
+                "   - Click the \"Delete Vendor\" button to remove the vendor from the system.\n\n" +
         );
         instructions.setEditable(false); // Make the text area read-only
         instructions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
