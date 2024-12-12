@@ -219,7 +219,7 @@ public class MainView {
                 "   - Click the \"Add Vendor\" button.\n\n" +
                 "2. **View Vendors on Map:**\n" +
                 "   - The map will display the locations of all added vendors.\n" +
-                "   - It will show all the details of the vendor" +
+                "   - It will show all the details of the vendor.\n\n" +
                 "3. **Vendor Search:**\n" +
                 "   - Use the search bar to find a specific vendor by name or description.\n" +
                 "   - The search results will dynamically filter the vendor list as you type.\n" +
