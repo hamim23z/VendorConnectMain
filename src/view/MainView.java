@@ -2,6 +2,8 @@ package view;
 
 import dao.UserDAO;
 import dao.VendorDAO;
+import model.Vendor;
+
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
@@ -9,10 +11,19 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
 import java.awt.*;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class MainView {
 
@@ -195,31 +206,44 @@ public class MainView {
 
         
         
-        // --- "How to Use" Page ---
+     // --- "How to Use" Page ---
         JPanel howToUsePanel = new JPanel();
         howToUsePanel.setLayout(new BorderLayout());
 
-        // Create a JTextArea for instructions
-        JTextArea instructions = new JTextArea(
+        // Create a JTextPane for instructions
+        JTextPane instructions = new JTextPane();
+        instructions.setContentType("text/plain"); // Set plain text
+        instructions.setText(
                 "1. **Add a Vendor:**\n" +
-                        "   - Enter the vendor's name, description, address, and phone number.\n" +
-                        "   - Click the \"Add Vendor\" button.\n\n" +
-                        "2. **View Vendors on Map:**\n" +
-                        "   - (Map functionality to be implemented later)\n" +
-                        "   - The map will display the locations of all added vendors.\n" +
-                        "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
-                        "3. **Other Features:**\n" +
-                        "   - (List future features here, e.g., vendor search, filtering, etc.)");
+                "   - Enter the vendor's name, description, address, and phone number.\n" +
+                "   - Click the \"Add Vendor\" button.\n\n" +
+                "2. **View Vendors on Map:**\n" +
+                "   - (Map functionality to be implemented later)\n" +
+                "   - The map will display the locations of all added vendors.\n" +
+                "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
+                "3. **Other Features:**\n" +
+                "   - (List future features here, e.g., vendor search, filtering, etc.)"
+        );
         instructions.setEditable(false); // Make the text area read-only
-        instructions.setLineWrap(true);
-        instructions.setWrapStyleWord(true);
         instructions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
+        instructions.setFont(new Font("Arial", Font.PLAIN, 14)); // Set font for better readability
 
-        // Add a scroll pane to the JTextArea
+        // Center the text using StyledDocument
+        StyledDocument doc = instructions.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
+        // Add a scroll pane to the JTextPane
         JScrollPane scrollPane = new JScrollPane(instructions);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Add the scroll pane to the howToUsePanel
         howToUsePanel.add(scrollPane, BorderLayout.CENTER);
+
+
+
 
         
         
@@ -252,6 +276,51 @@ public class MainView {
         
         // --- "Favorites" Page ---
         JPanel favoritesPanel = new JPanel();
+        favoritesPanel.setLayout(new BoxLayout(favoritesPanel, BoxLayout.Y_AXIS));
+
+        // Create a VendorDAO object to fetch vendor data
+        VendorDAO vendorDAO = new VendorDAO();
+        List<Vendor> vendors = vendorDAO.getAllVendors();
+
+        for (Vendor vendor : vendors) {
+            JPanel vendorPanel = new JPanel();
+            vendorPanel.setLayout(new GridLayout(0, 1));
+
+            // Create labels for each vendor's details
+            JLabel nameLabel1 = new JLabel("Name: " + vendor.getName());
+            JLabel addressLabel1 = new JLabel("Address: " + vendor.getAddress());
+            JLabel descriptionLabel1 = new JLabel("Description: " + vendor.getDescription());
+            JLabel phoneLabel1 = new JLabel("Phone: " + vendor.getPhone());
+
+            // Add the labels to the vendor panel
+            vendorPanel.add(nameLabel1);
+            vendorPanel.add(addressLabel1);
+            vendorPanel.add(descriptionLabel1);
+            vendorPanel.add(phoneLabel1);
+
+            // Add the vendor panel to the favorites panel
+            favoritesPanel.add(vendorPanel);
+
+            // Add some spacing between vendors
+            favoritesPanel.add(Box.createVerticalStrut(10));
+        }
+
+        // Ensure the panel has a preferred size that allows scrolling
+        favoritesPanel.setPreferredSize(new Dimension(
+            favoritesPanel.getPreferredSize().width, 
+            vendors.size() * 150  // Adjust multiplier based on panel height
+        ));
+
+        // Replace previous scrollPane11 addition with this
+        JScrollPane scrollPane11 = new JScrollPane(favoritesPanel);
+        scrollPane11.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // Add scrollPane11 directly to cardPanel
+        cardPanel.add(scrollPane11, "Favorites");
+
+
+
+        
 
         
         

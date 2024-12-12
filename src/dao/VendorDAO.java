@@ -3,10 +3,9 @@ package dao;
 import db.DatabaseConnector;
 import model.Vendor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VendorDAO {
 
@@ -43,15 +42,41 @@ public class VendorDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                // Retrieve the vendor data, including id
+                int vendorId = rs.getInt("id");
                 String name = rs.getString("name");
                 String description = rs.getString("description");  // Retrieve description
                 String address = rs.getString("address");
                 String phone = rs.getString("phone");
-                return new Vendor(name, description, address, phone);
+                // Return a new Vendor with the retrieved data
+                return new Vendor(vendorId, name, description, address, phone);  // Pass id to constructor
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // Method to fetch all vendors
+    public List<Vendor> getAllVendors() {
+        List<Vendor> vendors = new ArrayList<>();
+        String query = "SELECT * FROM vendors";
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                // Retrieve vendor data for each row in the result set
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+
+                // Add each vendor to the list
+                vendors.add(new Vendor(id, name, description, address, phone)); // Pass parameters in the correct order
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vendors;
     }
 }

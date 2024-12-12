@@ -8,9 +8,9 @@ module VendorConnectMain {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-	requires javafx.web;
-	requires java.desktop;
-	requires org.jxmapviewer.jxmapviewer2;
+    requires javafx.web;
+    requires java.desktop;
+    requires org.jxmapviewer.jxmapviewer2;
 
     // Expose packages for JavaFX
     opens controller to javafx.fxml;
