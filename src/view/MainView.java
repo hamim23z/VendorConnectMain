@@ -216,9 +216,12 @@ public class MainView {
                 "   - Enter the vendor's name, description, address, and phone number.\n" +
                 "   - Click the \"Add Vendor\" button.\n\n" +
                 "2. **View Vendors on Map:**\n" +
-                "   - (Map functionality to be implemented later)\n" +
                 "   - The map will display the locations of all added vendors.\n" +
+<<<<<<< HEAD
                 "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
+=======
+                "   - It will show all the details of the vendor.\n\n" +
+>>>>>>> decbef845e4327ae45047c3538e583051a1b3e98
                 "3. **Vendor Search:**\n" +
                 "   - Use the search bar to find a specific vendor by name or description.\n" +
                 "   - The search results will dynamically filter the vendor list as you type.\n" +
@@ -229,7 +232,11 @@ public class MainView {
                 "   - Click the \"Update Vendor\" button to save changes.\n\n" +
                 "5. **Delete a Vendor:**\n" +
                 "   - Select a vendor from the list.\n" +
+<<<<<<< HEAD
                 "   - Click the \"Delete Vendor\" button to remove the vendor from the system.\n\n"
+=======
+                "   - Click the \"Delete Vendor\" button to remove the vendor from the system.\n\n" +
+>>>>>>> decbef845e4327ae45047c3538e583051a1b3e98
         );
         instructions.setEditable(false); // Make the text area read-only
         instructions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
