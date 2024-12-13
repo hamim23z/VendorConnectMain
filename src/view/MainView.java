@@ -122,14 +122,12 @@ public class MainView {
         });
 
 
-        
-        
         // --- Navbar setup ---
         JPanel navbarPanel = new JPanel(new BorderLayout()); // Panel to hold the navbar (left and right sections)
         navbarPanel.setBackground(Color.BLACK); // Set background color to match the navbar color
         navbarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Left side of the navbar (logo or vendor name)
+        // Left side of the navbar
         JLabel logoLabel = new JLabel("VendorConnect");
         logoLabel.setForeground(Color.WHITE); // Set text color to white
         logoLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Optional: set font style for the logo/brand name
@@ -205,10 +203,10 @@ public class MainView {
         frame.add(navbarPanel, BorderLayout.NORTH);
 
         
-        
-     // --- "How to Use" Page ---
+        // --- "How to Use" Page ---
         JPanel howToUsePanel = new JPanel();
         howToUsePanel.setLayout(new BorderLayout());
+        howToUsePanel.setBackground(new Color(211, 211, 211)); // Light gray background
 
         // Create a JTextPane for instructions
         JTextPane instructions = new JTextPane();
@@ -221,8 +219,17 @@ public class MainView {
                 "   - (Map functionality to be implemented later)\n" +
                 "   - The map will display the locations of all added vendors.\n" +
                 "   - You can interact with the map to zoom, pan, and get more details about each vendor.\n\n" +
-                "3. **Other Features:**\n" +
-                "   - (List future features here, e.g., vendor search, filtering, etc.)"
+                "3. **Vendor Search:**\n" +
+                "   - Use the search bar to find a specific vendor by name or description.\n" +
+                "   - The search results will dynamically filter the vendor list as you type.\n" +
+                "   - Click on a search result to view more details or perform actions (e.g., Edit or Delete).\n\n" +
+                "4. **Edit a Vendor:**\n" +
+                "   - Select a vendor from the list.\n" +
+                "   - Update the desired fields such as name, description, address, or phone number.\n" +
+                "   - Click the \"Update Vendor\" button to save changes.\n\n" +
+                "5. **Delete a Vendor:**\n" +
+                "   - Select a vendor from the list.\n" +
+                "   - Click the \"Delete Vendor\" button to remove the vendor from the system.\n\n"
         );
         instructions.setEditable(false); // Make the text area read-only
         instructions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
@@ -243,14 +250,10 @@ public class MainView {
         howToUsePanel.add(scrollPane, BorderLayout.CENTER);
 
 
-
-
-        
-        
-        
         // --- "About Us" Page ---
         JPanel aboutUsPanel = new JPanel();
         aboutUsPanel.setLayout(new BorderLayout());
+        howToUsePanel.setBackground(new Color(0, 0, 255)); // Blue
 
         // Create a JTextArea for about us information
         JTextArea aboutUsText = new JTextArea(
@@ -262,76 +265,67 @@ public class MainView {
                         "Our team is dedicated to creating a safe and reliable space for both vendors and customers. We prioritize transparency, security, and customer satisfaction, ensuring that every transaction and interaction on our platform is smooth and trustworthy.\n\n" +
                         "Join our growing community of local businesses and customers today! Together, we can help strengthen local economies and make a positive impact in our communities."
         );
-aboutUsText.setEditable(false); // Make the text area read-only
-aboutUsText.setLineWrap(true);
-aboutUsText.setWrapStyleWord(true);
-aboutUsText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
+        aboutUsText.setEditable(false); // Make the text area read-only
+        aboutUsText.setLineWrap(true);
+        aboutUsText.setWrapStyleWord(true);
+        aboutUsText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Add a scroll pane to the JTextArea
         JScrollPane scrollPane1 = new JScrollPane(aboutUsText);
 
         // Add the scroll pane to the aboutUsPanel
         aboutUsPanel.add(scrollPane1, BorderLayout.CENTER);
-        
-        
-        
-        
-        
+
         
         // --- "Favorites" Page ---
         JPanel favoritesPanel = new JPanel();
-        favoritesPanel.setLayout(new BoxLayout(favoritesPanel, BoxLayout.Y_AXIS));
+        favoritesPanel.setLayout(new GridLayout(0, 2, 20, 10));
 
         // Create a VendorDAO object to fetch vendor data
         VendorDAO vendorDAO = new VendorDAO();
         List<Vendor> vendors = vendorDAO.getAllVendors();
 
         for (Vendor vendor : vendors) {
-            JPanel vendorPanel = new JPanel();
-            vendorPanel.setLayout(new GridLayout(0, 1));
+            JPanel vendorCard = new JPanel();
+            vendorCard.setLayout(new BorderLayout());
+            vendorCard.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            vendorCard.setBackground(Color.WHITE);
+            vendorCard.setPreferredSize(new Dimension(300, 130));
 
             // Create labels for each vendor's details
             JLabel nameLabel1 = new JLabel("Name: " + vendor.getName());
-            JLabel addressLabel1 = new JLabel("Address: " + vendor.getAddress());
+            nameLabel1.setFont(new Font("Arial", Font.BOLD, 14));
+
             JLabel descriptionLabel1 = new JLabel("Description: " + vendor.getDescription());
+            descriptionLabel1.setFont(new Font("Arial", Font.PLAIN, 12));
+
+            JLabel addressLabel1 = new JLabel("Address: " + vendor.getAddress());
+            addressLabel1.setFont(new Font("Arial", Font.PLAIN, 12));
+
             JLabel phoneLabel1 = new JLabel("Phone: " + vendor.getPhone());
+            phoneLabel1.setFont(new Font("Arial", Font.PLAIN, 12));
 
-            // Add the labels to the vendor panel
-            vendorPanel.add(nameLabel1);
-            vendorPanel.add(addressLabel1);
-            vendorPanel.add(descriptionLabel1);
-            vendorPanel.add(phoneLabel1);
 
-            // Add the vendor panel to the favorites panel
-            favoritesPanel.add(vendorPanel);
+            // Add the labels to the vendor card
+            JPanel labelsPanel = new JPanel();
+            labelsPanel.setLayout(new GridLayout(0, 1, 0, 8));
+            labelsPanel.add(nameLabel1);
+            labelsPanel.add(descriptionLabel1);
+            labelsPanel.add(addressLabel1);
+            labelsPanel.add(phoneLabel1);
+            vendorCard.add(labelsPanel, BorderLayout.CENTER);
 
-            // Add some spacing between vendors
-            favoritesPanel.add(Box.createVerticalStrut(10));
+            // Add the vendor card to the favorites panel
+            favoritesPanel.add(vendorCard);
         }
 
-        // Ensure the panel has a preferred size that allows scrolling
-        favoritesPanel.setPreferredSize(new Dimension(
-            favoritesPanel.getPreferredSize().width, 
-            vendors.size() * 150  // Adjust multiplier based on panel height
-        ));
-
-        // Replace previous scrollPane11 addition with this
+        // Add the favorites panel to a scrollable container
         JScrollPane scrollPane11 = new JScrollPane(favoritesPanel);
         scrollPane11.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Add scrollPane11 directly to cardPanel
         cardPanel.add(scrollPane11, "Favorites");
 
-
-
-        
-
-        
-        
-        
-        
-        
         
         // --- "Login" Page ---
         JPanel loginPanel = new JPanel();
