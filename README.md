@@ -5,7 +5,6 @@ These is my Final Project for Software Design Lab at The City College of New Yor
 - Semester: Fall 2024
 
 <br>
-<br>
 
 **Tools/Languages Used:**
 - Eclipse IDE
