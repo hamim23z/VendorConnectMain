@@ -6,9 +6,12 @@ These is my Final Project for Software Design Lab at The City College of New Yor
 
 <br>
 
-**Tools/Languages Used:**
+```
+**Tools, Languages, and Libraries Used**
+
 - Eclipse IDE
 - JavaFX
 - Java Swing
 - Java AWT
 - JX Map Viewer
+```
